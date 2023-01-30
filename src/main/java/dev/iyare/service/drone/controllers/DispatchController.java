@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.iyare.service.drone.entities.EntityDrone;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
+import dev.iyare.service.drone.models.response.AbstractResponse;
+import dev.iyare.service.drone.models.response.RegisterDroneResponse;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.repositories.EntityMedicationRepository;
 import dev.iyare.service.drone.utils.JsonUtil;
@@ -39,27 +41,49 @@ public class DispatchController
 	public @ResponseBody String registerDrone(@RequestHeader HttpHeaders headers, @RequestBody String request)
 	{
 		String response = null;
+		RegisterDroneResponse registerDroneResponse = null;
 
 		logger.info("Register Request: " + request);
 
-		List<String> headersList = headers.get("CHANNEL");
-		logger.info("headersList: " + headersList);
-		String channel = headersList.get(0);
-		logger.info("channel: " + channel);
+		try
+		{
+			List<String> headersList = headers.get("CHANNEL");
+			logger.info("headersList: " + headersList);
+			String channel = headersList.get(0);
+			logger.info("channel: " + channel);
 
-		RegisterDroneRequest registerDroneRequest = JsonUtil.fromJson(request, RegisterDroneRequest.class);
-		logger.info("registerDroneRequest: " + registerDroneRequest);
+			RegisterDroneRequest registerDroneRequest = JsonUtil.fromJson(request, RegisterDroneRequest.class);
+			logger.info("registerDroneRequest: " + registerDroneRequest);
 
-		String serialNumber = registerDroneRequest.getSerial_number();
-		String model = registerDroneRequest.getModel();
-		String weightLimit = registerDroneRequest.getWeight_limit();
-		String batteryCapacity = registerDroneRequest.getBattery_capacity();
-		String state = registerDroneRequest.getState().toUpperCase();
+			String serialNumber = registerDroneRequest.getSerial_number();
+			String model = registerDroneRequest.getModel();
+			String weightLimit = registerDroneRequest.getWeight_limit();
+			String batteryCapacity = registerDroneRequest.getBattery_capacity();
+			String state = registerDroneRequest.getState().toUpperCase();
 
-		EntityDrone entityDrone = new EntityDrone(serialNumber, model, weightLimit, batteryCapacity, state);
-		entityDroneRepository.save(entityDrone);
+			EntityDrone entityDrone = new EntityDrone(serialNumber, model, weightLimit, batteryCapacity, state);
+			entityDroneRepository.save(entityDrone);
 
-		return JsonUtil.toJson(response);
+			registerDroneResponse = new RegisterDroneResponse();
+			registerDroneResponse.setResponseCode(AbstractResponse.SUCCESSFUL_CODE);
+			registerDroneResponse.setResponseMessage(AbstractResponse.SUCCESSFUL);
+			registerDroneResponse.setResponseDescription("Drone Registration was Successful!");
+
+			response = JsonUtil.toJson(registerDroneResponse);
+
+		} catch (Exception e)
+		{
+			e.getMessage();
+
+			registerDroneResponse = new RegisterDroneResponse();
+			registerDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+			registerDroneResponse.setResponseMessage(AbstractResponse.FAILED);
+			registerDroneResponse.setResponseDescription(e.getMessage());
+
+			response = JsonUtil.toJson(registerDroneResponse);
+		}
+
+		return response;
 	}
 
 	@PostMapping(value = "/load-drone-with-meds")
