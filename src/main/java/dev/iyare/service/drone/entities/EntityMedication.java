@@ -1,5 +1,6 @@
 package dev.iyare.service.drone.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
@@ -14,6 +15,7 @@ public class EntityMedication extends AbstractEntity
 	@NotNull(message = "Medication weight is required")
 	String weight;
 
+	@Column(unique = true)
 	@NotNull(message = "Medication code is required")
 	String code;// (allowed only upper case letters, underscore and numbers);
 

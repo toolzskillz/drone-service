@@ -1,5 +1,7 @@
 package dev.iyare.service.drone.controllers;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpHeaders;
@@ -11,14 +13,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.iyare.service.drone.entities.EntityDrone;
+import dev.iyare.service.drone.models.request.RegisterDroneRequest;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.repositories.EntityMedicationRepository;
+import dev.iyare.service.drone.utils.JsonUtil;
 
 @RestController
 @RequestMapping("/drone/app/v1/service")
 public class DispatchController
 {
-	private static final Log LOG = LogFactory.getLog(DispatchController.class);
+	private static final Log logger = LogFactory.getLog(DispatchController.class);
 
 	EntityDroneRepository entityDroneRepository;
 	EntityMedicationRepository entityMedicationRepository;
@@ -35,10 +40,26 @@ public class DispatchController
 	{
 		String response = null;
 
-//		EntityDrone entityDrone = new EntityDrone();
-//		entityDroneRepository.save(entityDrone);
+		logger.info("Register Request: " + request);
 
-		return response;
+		List<String> headersList = headers.get("CHANNEL");
+		logger.info("headersList: " + headersList);
+		String channel = headersList.get(0);
+		logger.info("channel: " + channel);
+
+		RegisterDroneRequest registerDroneRequest = JsonUtil.fromJson(request, RegisterDroneRequest.class);
+		logger.info("registerDroneRequest: " + registerDroneRequest);
+
+		String serialNumber = registerDroneRequest.getSerial_number();
+		String model = registerDroneRequest.getModel();
+		String weightLimit = registerDroneRequest.getWeight_limit();
+		String batteryCapacity = registerDroneRequest.getBattery_capacity();
+		String state = registerDroneRequest.getState().toUpperCase();
+
+		EntityDrone entityDrone = new EntityDrone(serialNumber, model, weightLimit, batteryCapacity, state);
+		entityDroneRepository.save(entityDrone);
+
+		return JsonUtil.toJson(response);
 	}
 
 	@PostMapping(value = "/load-drone-with-meds")

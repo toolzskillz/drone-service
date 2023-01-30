@@ -1,5 +1,6 @@
 package dev.iyare.service.drone.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -10,14 +11,15 @@ public class EntityDrone extends AbstractEntity
 {
 	private static final long serialVersionUID = 1L;
 
-	@NotNull
+	@NotNull(message = "Drone serial number is required")
+	@Column(unique = true)
 	@Max(value = 100, message = "serial number should not be greater than 100")
 	String serial_number;
 
 	@NotNull(message = "Drone model is required i.e. Lightweight, Middleweight, Cruiserweight, Heavyweight")
 	String model;
 
-	@NotNull
+	@NotNull(message = "Drone model is required")
 	@Max(value = 500, message = "weight should not be greater than 500 grams")
 	String weight_limit;
 
