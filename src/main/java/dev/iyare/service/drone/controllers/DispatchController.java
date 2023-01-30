@@ -39,7 +39,16 @@ public class DispatchController
 	}
 
 	@PostMapping(value = "/load-drone")
-	public @ResponseBody String loadDroneWithMeds(String request)
+	public @ResponseBody String loadDroneWithMeds(@RequestHeader HttpHeaders headers, @RequestBody String request)
+	{
+		String response = null;
+
+		return response;
+	}
+
+	@PostMapping(value = "/check-medlist-for-drone")
+	public @ResponseBody String checkMedicationsForDrone(@RequestHeader HttpHeaders headers,
+			@RequestBody String request)
 	{
 		String response = null;
 
@@ -47,28 +56,18 @@ public class DispatchController
 	}
 
 	@GetMapping(value = "/get-available-drones")
-	public @ResponseBody String availableDrones(String request)
+	public @ResponseBody String availableDrones(@RequestHeader HttpHeaders headers)
 	{
 		String response = null;
 
 		return response;
 	}
-	
-	
+
 	@GetMapping(value = "/get-drone-battery-level")
-	public @ResponseBody String droneBatteryLevel(String request)
+	public @ResponseBody String droneBatteryLevel(@RequestHeader HttpHeaders headers)
 	{
 		String response = null;
 
 		return response;
 	}
-
-	@GetMapping(value = "/get-available-promo/{user_type}")
-	public @ResponseBody String checkMedicationForDrone(String request)
-	{
-		String response = null;
-
-		return response;
-	}
-
 }
