@@ -11,4 +11,12 @@ public class Drone
 		String DELIVERED = "DELIVERED";
 		String RETURNING = "RETURNING";
 	}
+
+	public interface WEIGHT
+	{
+		String Lightweight = "Lightweight";
+		String Middleweight = "Middleweight";
+		String Cruiserweight = "Cruiserweight";
+		String Heavyweight = "Heavyweight";
+	}
 }
