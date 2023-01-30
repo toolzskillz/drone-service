@@ -15,7 +15,7 @@ import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.repositories.EntityMedicationRepository;
 
 @RestController
-@RequestMapping("/drone/app/v1/service/")
+@RequestMapping("/drone/app/v1/service")
 public class DispatchController
 {
 	private static final Log LOG = LogFactory.getLog(DispatchController.class);
@@ -41,7 +41,7 @@ public class DispatchController
 		return response;
 	}
 
-	@PostMapping(value = "/load-drone")
+	@PostMapping(value = "/load-drone-with-meds")
 	public @ResponseBody String loadDroneWithMeds(@RequestHeader HttpHeaders headers, @RequestBody String request)
 	{
 		String response = null;

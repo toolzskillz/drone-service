@@ -1,5 +1,5 @@
-INSERT INTO "countries" VALUES (1, 'USA');
-INSERT INTO "countries" VALUES (2, 'France');
-INSERT INTO "countries" VALUES (3, 'Brazil');
-INSERT INTO "countries" VALUES (4, 'Italy');
-INSERT INTO "countries" VALUES (5, 'Canada');
+--INSERT INTO "drone" VALUES (1, '', '50%', 'Light weight', '12345', 'IDLE', '100');
+--INSERT INTO "drone" VALUES (2, '', '50%', 'Light weight', '12345', 'IDLE', '100');
+--INSERT INTO "drone" VALUES (3, '', '50%', 'Light weight', '12345', 'IDLE', '100');
+--INSERT INTO "drone" VALUES (4, '', '50%', 'Light weight', '12345', 'IDLE', '100');
+--INSERT INTO "drone" VALUES (5, '', '50%', 'Light weight', '12345', 'IDLE', '100');

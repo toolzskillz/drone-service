@@ -11,7 +11,7 @@
 	<artifactId>service.drone</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>service.drone</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Drone Service Project</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
@@ -52,6 +52,7 @@
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
+			<version>1.4.193</version>
 		</dependency>
 
 		<dependency>
