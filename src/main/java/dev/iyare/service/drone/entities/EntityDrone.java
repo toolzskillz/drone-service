@@ -14,20 +14,35 @@ public class EntityDrone extends AbstractEntity
 	@Max(value = 100, message = "serial number should not be greater than 100")
 	String serial_number;
 
-	@NotNull(message = "Lightweight, Middleweight, Cruiserweight, Heavyweight")
+	@NotNull(message = "Drone model is required i.e. Lightweight, Middleweight, Cruiserweight, Heavyweight")
 	String model;
 
 	@NotNull
-	@Max(value = 500, message = "weight should not be greater than 500")
+	@Max(value = 500, message = "weight should not be greater than 500 grams")
 	String weight_limit;
 
-	@NotNull
-	@Min(value = 25, message = "Age should not be less than 18")
-    @Max(value = 100, message = "Age should not be greater than 150")
+	@NotNull(message = "Drone battery capacity is required")
+	@Min(value = 25, message = "Drone battery capacity should not be less than 25")
+	@Max(value = 100, message = "Drone battery capacity should not be greater than 100")
 	String battery_capacity;
 
-	@NotNull
-	String state;// (IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING).
+	@NotNull(message = "Drone state is required i.e. IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING")
+	String state;
+
+	public EntityDrone(
+			@NotNull @Max(value = 100, message = "serial number should not be greater than 100") String serial_number,
+			@NotNull(message = "Drone model is required i.e. Lightweight, Middleweight, Cruiserweight, Heavyweight") String model,
+			@NotNull @Max(value = 500, message = "weight should not be greater than 500 grams") String weight_limit,
+			@NotNull(message = "Drone battery capacity is required") @Min(value = 25, message = "Drone battery capacity should not be less than 25") @Max(value = 100, message = "Drone battery capacity should not be greater than 100") String battery_capacity,
+			@NotNull(message = "Drone state is required i.e. IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING") String state)
+	{
+		super();
+		this.serial_number = serial_number;
+		this.model = model;
+		this.weight_limit = weight_limit;
+		this.battery_capacity = battery_capacity;
+		this.state = state;
+	}
 
 	public String getSerial_number()
 	{

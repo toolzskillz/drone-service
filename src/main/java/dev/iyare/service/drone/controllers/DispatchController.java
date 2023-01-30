@@ -35,6 +35,9 @@ public class DispatchController
 	{
 		String response = null;
 
+//		EntityDrone entityDrone = new EntityDrone();
+//		entityDroneRepository.save(entityDrone);
+
 		return response;
 	}
 

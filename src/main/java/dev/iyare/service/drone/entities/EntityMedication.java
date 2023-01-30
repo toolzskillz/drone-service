@@ -11,14 +11,26 @@ public class EntityMedication extends AbstractEntity
 	@NotNull(message = "Medication name is required")
 	String name;// (allowed only letters,numbers,‘-‘,‘_’);
 
-	@NotNull(message = "Medication name is required")
+	@NotNull(message = "Medication weight is required")
 	String weight;
 
-	@NotNull
+	@NotNull(message = "Medication code is required")
 	String code;// (allowed only upper case letters, underscore and numbers);
 
-	@NotNull
-	String image;// (picture of the medication case).
+	@NotNull(message = "Medication image is required")
+	String image;
+
+	public EntityMedication(@NotNull(message = "Medication name is required") String name,
+			@NotNull(message = "Medication weight is required") String weight,
+			@NotNull(message = "Medication code is required") String code,
+			@NotNull(message = "Medication image is required") String image)
+	{
+		super();
+		this.name = name;
+		this.weight = weight;
+		this.code = code;
+		this.image = image;
+	}
 
 	public String getName()
 	{
