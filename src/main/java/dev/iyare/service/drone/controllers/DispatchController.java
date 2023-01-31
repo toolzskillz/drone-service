@@ -1,6 +1,5 @@
 package dev.iyare.service.drone.controllers;
 
-import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.logging.Log;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.iyare.service.drone.entities.EntityDrone;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
 import dev.iyare.service.drone.models.response.AbstractResponse;
+import dev.iyare.service.drone.models.response.LoadDroneResponse;
 import dev.iyare.service.drone.models.response.RegisterDroneResponse;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.repositories.EntityMedicationRepository;
@@ -98,6 +98,30 @@ public class DispatchController
 	public @ResponseBody String loadDroneWithMeds(@RequestHeader HttpHeaders headers, @RequestBody String request)
 	{
 		String response = null;
+		LoadDroneResponse loadDroneResponse = null;
+
+		logger.info("Register Request: " + request);
+
+		try
+		{
+			if (isHeadersValid(headers) == false)
+			{
+				loadDroneResponse = new LoadDroneResponse();
+				loadDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+				loadDroneResponse.setResponseMessage(AbstractResponse.FAILED);
+				loadDroneResponse.setResponseDescription("Missing or Invalid Header(s)");
+
+				response = JsonUtil.toJson(loadDroneResponse);
+				return response;
+			}
+
+			
+			
+			
+		} catch (Exception e)
+		{
+
+		}
 
 		return response;
 	}
@@ -108,6 +132,14 @@ public class DispatchController
 	{
 		String response = null;
 
+		try
+		{
+
+		} catch (Exception e)
+		{
+
+		}
+
 		return response;
 	}
 
@@ -116,6 +148,14 @@ public class DispatchController
 	{
 		String response = null;
 
+		try
+		{
+
+		} catch (Exception e)
+		{
+
+		}
+
 		return response;
 	}
 
@@ -123,6 +163,14 @@ public class DispatchController
 	public @ResponseBody String droneBatteryLevel(@RequestHeader HttpHeaders headers)
 	{
 		String response = null;
+
+		try
+		{
+
+		} catch (Exception e)
+		{
+
+		}
 
 		return response;
 	}
