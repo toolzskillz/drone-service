@@ -16,6 +16,7 @@ public class EntityDrone extends AbstractEntity
 	@NotNull(message = "Drone serial number is required")
 	@Column(unique = true)
 	@Length(min = 1, max = 100, message = "Serial number should not be greater than 100 characters")
+	
 	String serial_number;
 
 	@NotNull(message = "Drone model is required i.e. Lightweight, Middleweight, Cruiserweight, Heavyweight")

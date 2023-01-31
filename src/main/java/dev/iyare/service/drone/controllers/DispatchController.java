@@ -55,7 +55,7 @@ public class DispatchController
 			}
 
 			RegisterDroneRequest registerDroneRequest = JsonUtil.fromJson(request, RegisterDroneRequest.class);
-			logger.info("registerDroneRequest: " + JsonUtil.toJson(registerDroneRequest));
+//			logger.info("registerDroneRequest: " + JsonUtil.toJson(registerDroneRequest));
 
 			String serialNumber = registerDroneRequest.getSerial_number();
 			String model = registerDroneRequest.getModel();
@@ -108,10 +108,13 @@ public class DispatchController
 			}
 
 			LoadDroneRequest loadDroneRequest = JsonUtil.fromJson(request, LoadDroneRequest.class);
-			logger.info("loadDroneRequest: " + JsonUtil.toJson(loadDroneRequest));
+//			logger.info("loadDroneRequest: " + JsonUtil.toJson(loadDroneRequest));
 
 			String serialNumber = loadDroneRequest.getSerial_number();
 			String model = loadDroneRequest.getModel();
+
+			logger.info("serialNumber: " + serialNumber);
+			logger.info("model: " + model);
 
 			EntityDrone entityDrone;
 			if (Objects.nonNull(serialNumber) && Objects.nonNull(model))
@@ -123,12 +126,13 @@ public class DispatchController
 			List<MedicationRequest> medications = loadDroneRequest.getMedications();
 			for (MedicationRequest medication : medications)
 			{
-				logger.info("medication: " + medication);
+				logger.info("medication: " + JsonUtil.toJson(medication));
 			}
+			
 
 		} catch (Exception e)
 		{
-			e.getMessage();
+			e.printStackTrace();
 
 			loadDroneResponse = new LoadDroneResponse();
 			loadDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
