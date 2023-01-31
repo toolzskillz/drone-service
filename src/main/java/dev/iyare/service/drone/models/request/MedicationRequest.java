@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
-public class RegisterMedicationRequest implements Serializable
+public class MedicationRequest implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -14,17 +14,6 @@ public class RegisterMedicationRequest implements Serializable
 	String weight;
 	String code;
 	String image;
-	String drone_serial_number;
-
-	public String getDrone_serial_number()
-	{
-		return drone_serial_number;
-	}
-
-	public void setDrone_serial_number(String drone_serial_number)
-	{
-		this.drone_serial_number = drone_serial_number;
-	}
 
 	public static long getSerialversionuid()
 	{

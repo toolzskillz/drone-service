@@ -1,5 +1,6 @@
 package dev.iyare.service.drone.controllers;
 
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.logging.Log;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.iyare.service.drone.entities.EntityDrone;
+import dev.iyare.service.drone.models.request.LoadDroneRequest;
+import dev.iyare.service.drone.models.request.MedicationRequest;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
 import dev.iyare.service.drone.models.response.AbstractResponse;
 import dev.iyare.service.drone.models.response.LoadDroneResponse;
@@ -44,24 +47,15 @@ public class DispatchController
 		String response = null;
 		RegisterDroneResponse registerDroneResponse = null;
 
-		logger.info("Register Request: " + request);
-
 		try
 		{
-
 			if (isHeadersValid(headers) == false)
 			{
-				registerDroneResponse = new RegisterDroneResponse();
-				registerDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-				registerDroneResponse.setResponseMessage(AbstractResponse.FAILED);
-				registerDroneResponse.setResponseDescription("Missing or Invalid Header(s)");
-
-				response = JsonUtil.toJson(registerDroneResponse);
-				return response;
+				return JsonUtil.toJson(invalidHeader(new RegisterDroneResponse()));
 			}
 
 			RegisterDroneRequest registerDroneRequest = JsonUtil.fromJson(request, RegisterDroneRequest.class);
-			logger.info("registerDroneRequest: " + registerDroneRequest);
+			logger.info("registerDroneRequest: " + JsonUtil.toJson(registerDroneRequest));
 
 			String serialNumber = registerDroneRequest.getSerial_number();
 			String model = registerDroneRequest.getModel();
@@ -69,7 +63,13 @@ public class DispatchController
 			String batteryCapacity = registerDroneRequest.getBattery_capacity();
 			String state = registerDroneRequest.getState().toUpperCase();
 
-			EntityDrone entityDrone = new EntityDrone(serialNumber, model, weightLimit, batteryCapacity, state);
+			EntityDrone entityDrone = new EntityDrone();
+			entityDrone.setSerial_number(serialNumber);
+			entityDrone.setModel(model);
+			entityDrone.setWeight_limit(weightLimit);
+			entityDrone.setBattery_capacity(batteryCapacity);
+			entityDrone.setState(state);
+
 			entityDroneRepository.save(entityDrone);
 
 			registerDroneResponse = new RegisterDroneResponse();
@@ -81,7 +81,7 @@ public class DispatchController
 
 		} catch (Exception e)
 		{
-			e.getMessage();
+			e.printStackTrace();
 
 			registerDroneResponse = new RegisterDroneResponse();
 			registerDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
@@ -100,27 +100,42 @@ public class DispatchController
 		String response = null;
 		LoadDroneResponse loadDroneResponse = null;
 
-		logger.info("Register Request: " + request);
-
 		try
 		{
 			if (isHeadersValid(headers) == false)
 			{
-				loadDroneResponse = new LoadDroneResponse();
-				loadDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-				loadDroneResponse.setResponseMessage(AbstractResponse.FAILED);
-				loadDroneResponse.setResponseDescription("Missing or Invalid Header(s)");
-
-				response = JsonUtil.toJson(loadDroneResponse);
-				return response;
+				return JsonUtil.toJson(invalidHeader(new LoadDroneResponse()));
 			}
 
-			
-			
-			
+			LoadDroneRequest loadDroneRequest = JsonUtil.fromJson(request, LoadDroneRequest.class);
+			logger.info("loadDroneRequest: " + JsonUtil.toJson(loadDroneRequest));
+
+			String serialNumber = loadDroneRequest.getSerial_number();
+			String model = loadDroneRequest.getModel();
+
+			EntityDrone entityDrone;
+			if (Objects.nonNull(serialNumber) && Objects.nonNull(model))
+			{
+				entityDrone = entityDroneRepository.findBySerialNoAndModel(serialNumber, model);
+				logger.info("entityDrone: " + JsonUtil.toJson(entityDrone));
+			}
+
+			List<MedicationRequest> medications = loadDroneRequest.getMedications();
+			for (MedicationRequest medication : medications)
+			{
+				logger.info("medication: " + medication);
+			}
+
 		} catch (Exception e)
 		{
+			e.getMessage();
 
+			loadDroneResponse = new LoadDroneResponse();
+			loadDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+			loadDroneResponse.setResponseMessage(AbstractResponse.FAILED);
+			loadDroneResponse.setResponseDescription(e.getMessage());
+
+			response = JsonUtil.toJson(loadDroneResponse);
 		}
 
 		return response;
@@ -204,4 +219,11 @@ public class DispatchController
 		return emptyValues ^ validValues;
 	}
 
+	AbstractResponse invalidHeader(AbstractResponse response)
+	{
+		response.setResponseCode(AbstractResponse.FAILED_CODE);
+		response.setResponseMessage(AbstractResponse.FAILED);
+		response.setResponseDescription("Missing or Invalid Header(s)");
+		return response;
+	}
 }
