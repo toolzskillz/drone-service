@@ -14,13 +14,21 @@ public class RegisterMedicationRequest implements Serializable
 	String weight;
 	String code;
 	String image;
+	String drone_serial_number;
 
-	public RegisterMedicationRequest(String name, String weight, String code, String image)
+	public String getDrone_serial_number()
 	{
-		this.name = name;
-		this.weight = weight;
-		this.code = code;
-		this.image = image;
+		return drone_serial_number;
+	}
+
+	public void setDrone_serial_number(String drone_serial_number)
+	{
+		this.drone_serial_number = drone_serial_number;
+	}
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
 	}
 
 	public String getName()

@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.lang.Nullable;
+
 @Entity(name = "medication")
 public class EntityMedication extends AbstractEntity
 {
@@ -20,18 +22,25 @@ public class EntityMedication extends AbstractEntity
 	String code;// (allowed only upper case letters, underscore and numbers);
 
 	@NotNull(message = "Medication image is required")
+	@Column(columnDefinition = "TEXT")
 	String image;
 
-	public EntityMedication(@NotNull(message = "Medication name is required") String name,
-			@NotNull(message = "Medication weight is required") String weight,
-			@NotNull(message = "Medication code is required") String code,
-			@NotNull(message = "Medication image is required") String image)
+	@Nullable
+	String drone_serial_number;
+
+	public String getDrone_serial_number()
 	{
-		super();
-		this.name = name;
-		this.weight = weight;
-		this.code = code;
-		this.image = image;
+		return drone_serial_number;
+	}
+
+	public void setDrone_serial_number(String drone_serial_number)
+	{
+		this.drone_serial_number = drone_serial_number;
+	}
+
+	public static long getSerialversionuid()
+	{
+		return serialVersionUID;
 	}
 
 	public String getName()

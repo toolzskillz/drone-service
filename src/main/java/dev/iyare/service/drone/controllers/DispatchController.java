@@ -1,6 +1,7 @@
 package dev.iyare.service.drone.controllers;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,10 +48,17 @@ public class DispatchController
 
 		try
 		{
-			List<String> headersList = headers.get("CHANNEL");
-			logger.info("headersList: " + headersList);
-			String channel = headersList.get(0);
-			logger.info("channel: " + channel);
+
+			if (isHeadersValid(headers) == false)
+			{
+				registerDroneResponse = new RegisterDroneResponse();
+				registerDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+				registerDroneResponse.setResponseMessage(AbstractResponse.FAILED);
+				registerDroneResponse.setResponseDescription("Missing or Invalid Header(s)");
+
+				response = JsonUtil.toJson(registerDroneResponse);
+				return response;
+			}
 
 			RegisterDroneRequest registerDroneRequest = JsonUtil.fromJson(request, RegisterDroneRequest.class);
 			logger.info("registerDroneRequest: " + registerDroneRequest);
@@ -118,4 +126,34 @@ public class DispatchController
 
 		return response;
 	}
+
+	private boolean isHeadersValid(HttpHeaders headers)
+	{
+		boolean emptyValues, validValues;
+		try
+		{
+			String contentType = headers.get("Content-Type").get(0);
+			String publicKey = headers.get("PublicKey").get(0);
+
+			emptyValues = Objects.isNull(contentType) || contentType.contentEquals("") || Objects.isNull(publicKey)
+					|| publicKey.contentEquals("");
+
+			if (emptyValues == true)
+				return false;
+
+			validValues = contentType.contentEquals("application/json")
+					&& publicKey.contentEquals("TXVzYWxhIHNvZnQgSW50ZXJ2aWV3");
+
+			if (validValues == true)
+				return true;
+
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+
+		return emptyValues ^ validValues;
+	}
+
 }
