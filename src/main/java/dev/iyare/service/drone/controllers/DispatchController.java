@@ -7,6 +7,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,11 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.iyare.service.drone.entities.EntityDrone;
-import dev.iyare.service.drone.enums.Drone;
 import dev.iyare.service.drone.models.request.LoadDroneRequest;
 import dev.iyare.service.drone.models.request.MedicationRequest;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
 import dev.iyare.service.drone.models.response.AbstractResponse;
+import dev.iyare.service.drone.models.response.DroneBatteryLevelResponse;
 import dev.iyare.service.drone.models.response.LoadDroneResponse;
 import dev.iyare.service.drone.models.response.RegisterDroneResponse;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
@@ -178,13 +179,18 @@ public class DispatchController
 		return response;
 	}
 
-	@GetMapping(value = "/get-drone-battery-level")
-	public @ResponseBody String droneBatteryLevel(@RequestHeader HttpHeaders headers)
+	@GetMapping(value = "/get-drone-battery-level/{serial_number}")
+	public @ResponseBody String droneBatteryLevel(@RequestHeader HttpHeaders headers, @PathVariable String serial_number)
 	{
 		String response = null;
 
+		DroneBatteryLevelResponse droneBatteryLevelResponse = null;
 		try
 		{
+			if (isHeadersValid(headers) == false)
+			{
+				return JsonUtil.toJson(invalidHeader(new DroneBatteryLevelResponse()));
+			}
 
 		} catch (Exception e)
 		{
