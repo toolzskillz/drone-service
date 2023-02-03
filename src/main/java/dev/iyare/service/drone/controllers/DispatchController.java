@@ -21,6 +21,7 @@ import dev.iyare.service.drone.models.request.MedicationRequest;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
 import dev.iyare.service.drone.models.response.AbstractResponse;
 import dev.iyare.service.drone.models.response.DroneBatteryLevelResponse;
+import dev.iyare.service.drone.models.response.DronesAvailableResponse;
 import dev.iyare.service.drone.models.response.LoadDroneResponse;
 import dev.iyare.service.drone.models.response.RegisterDroneResponse;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
@@ -121,7 +122,7 @@ public class DispatchController
 			EntityDrone entityDrone;
 			if (Objects.nonNull(serialNumber) && Objects.nonNull(model))
 			{
-				entityDrone = entityDroneRepository.findBySerialNoAndModel(serialNumber, model);
+				entityDrone = entityDroneRepository.verifyDroneAvailable(serialNumber, model);
 				logger.info("entityDrone: " + JsonUtil.toJson(entityDrone));
 			}
 
@@ -167,20 +168,54 @@ public class DispatchController
 	public @ResponseBody String availableDrones(@RequestHeader HttpHeaders headers)
 	{
 		String response = null;
+		DronesAvailableResponse dronesAvailableResponse = null;
 
 		try
 		{
+			if (isHeadersValid(headers) == false)
+			{
+				return JsonUtil.toJson(invalidHeader(new DroneBatteryLevelResponse()));
+			}
+
+			List<EntityDrone> entityDronesList = entityDroneRepository.findAvailableDrones();
+
+			if (Objects.nonNull(entityDronesList) && entityDronesList.size() > 0)
+			{
+				dronesAvailableResponse = new DronesAvailableResponse();
+				dronesAvailableResponse.setData(JsonUtil.toJson(entityDronesList));
+				dronesAvailableResponse.setResponseCode(AbstractResponse.SUCCESSFUL_CODE);
+				dronesAvailableResponse.setResponseMessage(AbstractResponse.SUCCESSFUL);
+				dronesAvailableResponse.setResponseDescription("Available Drone(s) Found!");
+
+				response = JsonUtil.toJson(dronesAvailableResponse);
+			} else
+			{
+				dronesAvailableResponse = new DronesAvailableResponse();
+				dronesAvailableResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+				dronesAvailableResponse.setResponseMessage(AbstractResponse.FAILED);
+				dronesAvailableResponse.setResponseDescription("No Drone(s) available");
+
+				response = JsonUtil.toJson(dronesAvailableResponse);
+			}
 
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 
+			dronesAvailableResponse = new DronesAvailableResponse();
+			dronesAvailableResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+			dronesAvailableResponse.setResponseMessage(AbstractResponse.FAILED);
+			dronesAvailableResponse.setResponseDescription(e.getMessage());
+
+			response = JsonUtil.toJson(dronesAvailableResponse);
 		}
 
 		return response;
 	}
 
 	@GetMapping(value = "/get-drone-battery-level/{serial_number}")
-	public @ResponseBody String droneBatteryLevel(@RequestHeader HttpHeaders headers, @PathVariable String serial_number)
+	public @ResponseBody String droneBatteryLevel(@RequestHeader HttpHeaders headers,
+			@PathVariable String serial_number)
 	{
 		String response = null;
 
@@ -192,9 +227,37 @@ public class DispatchController
 				return JsonUtil.toJson(invalidHeader(new DroneBatteryLevelResponse()));
 			}
 
+			EntityDrone entityDrone = entityDroneRepository.findBySerialNo(serial_number);
+			if (Objects.nonNull(entityDrone))
+			{
+				droneBatteryLevelResponse = new DroneBatteryLevelResponse();
+				droneBatteryLevelResponse.setBatteryLevel(entityDrone.getBattery_capacity());
+				droneBatteryLevelResponse.setModel(entityDrone.getModel());
+				droneBatteryLevelResponse.setResponseCode(AbstractResponse.SUCCESSFUL_CODE);
+				droneBatteryLevelResponse.setResponseMessage(AbstractResponse.SUCCESSFUL);
+				droneBatteryLevelResponse.setResponseDescription("Drone Found!");
+
+				response = JsonUtil.toJson(droneBatteryLevelResponse);
+			} else
+			{
+				droneBatteryLevelResponse = new DroneBatteryLevelResponse();
+				droneBatteryLevelResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+				droneBatteryLevelResponse.setResponseMessage(AbstractResponse.FAILED);
+				droneBatteryLevelResponse.setResponseDescription("Drone not found!");
+
+				response = JsonUtil.toJson(droneBatteryLevelResponse);
+			}
+
 		} catch (Exception e)
 		{
+			e.printStackTrace();
 
+			droneBatteryLevelResponse = new DroneBatteryLevelResponse();
+			droneBatteryLevelResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+			droneBatteryLevelResponse.setResponseMessage(AbstractResponse.FAILED);
+			droneBatteryLevelResponse.setResponseDescription(e.getMessage());
+
+			response = JsonUtil.toJson(droneBatteryLevelResponse);
 		}
 
 		return response;
