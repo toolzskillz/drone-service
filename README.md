@@ -1,7 +1,7 @@
 # Drone Delivery Service
 This is a service via REST API that allows clients to communicate with the drones for delivering medications. 
 
-# Services include:
+## Services include:
 - Registering a drone.
 - Loading a drone with medication items.
 - Checking loaded medication items for a given drone. 
@@ -11,7 +11,7 @@ This is a service via REST API that allows clients to communicate with the drone
 - Prevent the drone from being in LOADING state if the battery level is **below 25%**;
 - Periodic task to check drones battery levels and create history/audit event log for this
 
- # Postman collection for testing: 
+ ## Postman collection for testing: 
   https://api.postman.com/collections/991494-2874dbdf-a564-4bb5-8972-2eff9aa35424?access_key=PMAT-01GR455QJ3SFZ5NV2FJ321MHXT 
 
  ## Generate Base64 image:
