@@ -1,13 +1,13 @@
 package dev.iyare.service.drone.enums;
 
-public enum DroneWeightLimit
+public enum Drone
 {
 	LIGHT("125", "LightWeight"), MIDDLE("250", "MiddleWeight"), CRUISER("375", "CruiserWeight"),
 	HEAVY("500", "HeavyWeight");
 
 	private String code, description;
 
-	DroneWeightLimit(String code, String description)
+	Drone(String code, String description)
 	{
 		this.code = code;
 		this.description = description;

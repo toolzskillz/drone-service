@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.iyare.service.drone.entities.EntityDrone;
+import dev.iyare.service.drone.enums.Drone;
 import dev.iyare.service.drone.models.request.LoadDroneRequest;
 import dev.iyare.service.drone.models.request.MedicationRequest;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
@@ -65,8 +66,8 @@ public class DispatchController
 
 			EntityDrone entityDrone = new EntityDrone();
 			entityDrone.setSerial_number(serialNumber);
-			entityDrone.setModel(model);
-			entityDrone.setWeight_limit(weightLimit);
+			entityDrone.setModel(Drone.LIGHT.getDescription());
+			entityDrone.setWeight_limit(Drone.LIGHT.getCode());
 			entityDrone.setBattery_capacity(batteryCapacity);
 			entityDrone.setState(state);
 
@@ -128,7 +129,6 @@ public class DispatchController
 			{
 				logger.info("medication: " + JsonUtil.toJson(medication));
 			}
-			
 
 		} catch (Exception e)
 		{
