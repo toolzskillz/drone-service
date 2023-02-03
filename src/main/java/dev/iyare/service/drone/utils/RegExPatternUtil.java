@@ -19,9 +19,9 @@ public class RegExPatternUtil
 		return Pattern.matches(MED_CODE, input);
 	}
 
-//	public static void main(String[] args)
-//	{
-//		System.out.println("matchMedName: " + RegExPatternUtil.matchMedName("TurboS"));
-////		System.out.println("matchMedCode: " + RegExPatternUtil.matchMedCode("7"));
-//	}
+	public static void main(String[] args)
+	{
+		System.out.println("matchMedName: " + RegExPatternUtil.matchMedName("Turbo S"));
+//		System.out.println("matchMedCode: " + RegExPatternUtil.matchMedCode("7"));
+	}
 }

@@ -12,11 +12,11 @@ public class Drone
 		String RETURNING = "RETURNING";
 	}
 
-	public interface WEIGHT
+	public interface WEIGHT_LIMIT
 	{
-		String Lightweight = "Lightweight";
-		String Middleweight = "Middleweight";
-		String Cruiserweight = "Cruiserweight";
-		String Heavyweight = "Heavyweight";
+		String LIGHT = "Lightweight";
+		String MIDDLE = "Middleweight";
+		String CRUISER = "Cruiserweight";
+		String HEAVY = "Heavyweight";
 	}
 }

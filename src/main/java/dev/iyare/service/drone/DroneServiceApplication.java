@@ -13,6 +13,11 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import dev.iyare.service.drone.constants.Drone;
+import dev.iyare.service.drone.entities.EntityDrone;
+import dev.iyare.service.drone.repositories.EntityDroneRepository;
+import dev.iyare.service.drone.repositories.EntityMedicationRepository;
+
 @EntityScan("dev.iyare.service.*")
 @Configuration
 @SpringBootApplication
@@ -23,6 +28,16 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 	public static void main(String[] args)
 	{
 		SpringApplication.run(DroneServiceApplication.class, args);
+	}
+
+	EntityDroneRepository entityDroneRepository;
+	EntityMedicationRepository entityMedicationRepository;
+
+	public DroneServiceApplication(EntityDroneRepository entityDroneRepository,
+			EntityMedicationRepository entityMedicationRepository)
+	{
+		this.entityDroneRepository = entityDroneRepository;
+		this.entityMedicationRepository = entityMedicationRepository;
 	}
 
 	@Override
@@ -39,7 +54,19 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 			@Override
 			public void contextInitialized(ServletContextEvent event)
 			{
-				logger.info("+++++++++++++++++ ServletContextListener initialized");
+				logger.info("+++++++++++++++++ Preloading required data in db");
+				
+				EntityDrone entityDrone = null;
+
+				entityDrone = new EntityDrone();
+				entityDrone.setSerial_number("1234");
+				entityDrone.setModel(Drone.WEIGHT_LIMIT.LIGHT);
+				entityDrone.setWeight_limit("125");
+				entityDrone.setBattery_capacity("50");
+				entityDrone.setState(Drone.STATE.IDLE);
+				entityDroneRepository.save(entityDrone);
+
+//				entityMedicationRepository.save(null);
 
 			}
 
