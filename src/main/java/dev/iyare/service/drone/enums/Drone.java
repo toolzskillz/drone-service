@@ -5,31 +5,31 @@ public enum Drone
 	LIGHT("125", "LightWeight"), MIDDLE("250", "MiddleWeight"), CRUISER("375", "CruiserWeight"),
 	HEAVY("500", "HeavyWeight");
 
-	private String code, description;
+	private String weightLimit, model;
 
-	Drone(String code, String description)
+	Drone(String weightLimit, String model)
 	{
-		this.code = code;
-		this.description = description;
+		this.weightLimit = weightLimit;
+		this.model = model;
 	}
 
-	public String getCode()
+	public String getWeightLimit()
 	{
-		return code;
+		return weightLimit;
 	}
 
-	public void setCode(String code)
+	public void setWeightLimit(String code)
 	{
-		this.code = code;
+		this.weightLimit = code;
 	}
 
-	public String getDescription()
+	public String getModel()
 	{
-		return description;
+		return model;
 	}
 
-	public void setDescription(String description)
+	public void setModel(String description)
 	{
-		this.description = description;
+		this.model = description;
 	}
 }

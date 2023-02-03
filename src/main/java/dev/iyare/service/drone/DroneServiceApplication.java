@@ -61,8 +61,8 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 
 				entityDrone = new EntityDrone();
 				entityDrone.setSerial_number("1234");
-				entityDrone.setModel(Drone.LIGHT.getDescription());
-				entityDrone.setWeight_limit(Drone.LIGHT.getCode());
+				entityDrone.setModel(Drone.LIGHT.getModel());
+				entityDrone.setWeight_limit(Drone.LIGHT.getWeightLimit());
 				entityDrone.setBattery_capacity("50");
 				entityDrone.setState(DroneState.IDLE.getDescription());
 				entityDroneRepository.save(entityDrone);

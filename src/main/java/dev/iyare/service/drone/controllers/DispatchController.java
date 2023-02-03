@@ -66,8 +66,8 @@ public class DispatchController
 
 			EntityDrone entityDrone = new EntityDrone();
 			entityDrone.setSerial_number(serialNumber);
-			entityDrone.setModel(Drone.LIGHT.getDescription());
-			entityDrone.setWeight_limit(Drone.LIGHT.getCode());
+			entityDrone.setModel(model);
+			entityDrone.setWeight_limit(weightLimit);
 			entityDrone.setBattery_capacity(batteryCapacity);
 			entityDrone.setState(state);
 
