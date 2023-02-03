@@ -258,7 +258,6 @@ public class DispatchController
 		boolean emptyValues, validValues;
 		try
 		{
-			logger.info("headers: " + JsonUtil.toJson(headers));
 			String contentType = headers.get("Content-Type").get(0);
 			String publicKey = headers.get("PublicKey").get(0);
 

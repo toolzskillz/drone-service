@@ -78,7 +78,6 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 
 	protected void preLoadMedications()
 	{
-
 		EntityMedication entityMedication = null;
 		List<EntityMedication> medications = new ArrayList<EntityMedication>();
 
