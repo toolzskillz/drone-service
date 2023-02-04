@@ -27,6 +27,7 @@ import dev.iyare.service.drone.models.response.RegisterDroneResponse;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.repositories.EntityMedicationRepository;
 import dev.iyare.service.drone.utils.JsonUtil;
+import dev.iyare.service.drone.utils.RegExPatternUtil;
 
 @RestController
 @RequestMapping("/drone/app/v1/service")
@@ -119,26 +120,54 @@ public class DispatchController
 			logger.info("serialNumber: " + serialNumber);
 			logger.info("model: " + model);
 
-			EntityDrone entityDrone;
+			EntityDrone entityDroneFound;
 			if (Objects.nonNull(serialNumber) && Objects.nonNull(model))
 			{
-				entityDrone = entityDroneRepository.verifyDroneAvailable(serialNumber, model);
-				logger.info("entityDrone: " + JsonUtil.toJson(entityDrone));
-			}
+				entityDroneFound = entityDroneRepository.verifyDroneAvailable(serialNumber, model);
+				logger.info("entityDrone: " + JsonUtil.toJson(entityDroneFound));
 
-			List<MedicationRequest> medications = loadDroneRequest.getMedications();
-			for (MedicationRequest medication : medications)
-			{
-				logger.info("medication: " + JsonUtil.toJson(medication));
-			}
+				if (Objects.nonNull(entityDroneFound))
+				{
+					List<MedicationRequest> medications = loadDroneRequest.getMedications();
+					for (MedicationRequest medication : medications)
+					{
+						medication.setImage(null);
 
+						boolean medName = RegExPatternUtil.matchMedName(medication.getName());
+
+						if (medName == false)
+						{
+							loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
+									"Invalid Medication Name");
+							response = JsonUtil.toJson(loadDroneResponse);
+							break;
+						}
+
+						boolean medCode = RegExPatternUtil.matchMedCode(medication.getCode());
+						if (medCode == false)
+						{
+							loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
+									"Invalid Medication Code");
+							response = JsonUtil.toJson(loadDroneResponse);
+							break;
+						}
+
+						logger.info("medication: " + JsonUtil.toJson(medication));
+					}
+				} else
+				{
+					loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
+							"Drone not found");
+					response = JsonUtil.toJson(loadDroneResponse);
+				}
+			}
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 
 			loadDroneResponse = new LoadDroneResponse();
-			loadDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-			loadDroneResponse.setResponseMessage(AbstractResponse.FAILED);
+//			loadDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
+//			loadDroneResponse.setResponseMessage(AbstractResponse.FAILED);
 			loadDroneResponse.setResponseDescription(e.getMessage());
 
 			response = JsonUtil.toJson(loadDroneResponse);
@@ -287,6 +316,14 @@ public class DispatchController
 		response.setResponseCode(AbstractResponse.FAILED_CODE);
 		response.setResponseMessage(AbstractResponse.FAILED);
 		response.setResponseDescription("Missing or Invalid Header(s)");
+		return response;
+	}
+
+	AbstractResponse failed(AbstractResponse response, String message)
+	{
+		response.setResponseCode(AbstractResponse.FAILED_CODE);
+		response.setResponseMessage(AbstractResponse.FAILED);
+		response.setResponseDescription(message);
 		return response;
 	}
 }

@@ -1,6 +1,7 @@
 package dev.iyare.service.drone.entities;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity(name = "battery_history")
 public class EntityBatteryHistory extends AbstractEntity
@@ -23,19 +25,15 @@ public class EntityBatteryHistory extends AbstractEntity
 	String battery_capacity;
 
 	@NotNull(message = "Date created required")
-	Date date_audited;
+	@DateTimeFormat
+	Timestamp date_audited;
 
-	public EntityBatteryHistory()
-	{
-
-	}
-
-	public Date getDate_audited()
+	public Timestamp getDate_audited()
 	{
 		return date_audited;
 	}
 
-	public void setDate_audited(Date date_audited)
+	public void setDate_audited(Timestamp date_audited)
 	{
 		this.date_audited = date_audited;
 	}

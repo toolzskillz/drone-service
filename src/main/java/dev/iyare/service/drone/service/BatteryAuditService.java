@@ -1,11 +1,10 @@
 package dev.iyare.service.drone.service;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.iyare.service.drone.entities.EntityBatteryHistory;
@@ -25,7 +24,6 @@ public class BatteryAuditService
 	EntityBatteryHistoryRepository entityBatteryHistoryRepository;
 
 	Thread auditThread;
-
 
 	public BatteryAuditService(EntityDroneRepository entityDroneRepository,
 			EntityBatteryHistoryRepository entityBatteryHistoryRepository)
@@ -76,7 +74,7 @@ public class BatteryAuditService
 	private synchronized void auditBatteries() throws Exception
 	{
 		logger.info(":::::::::::::::::::::: Auditing Drone batteries. . . ");
-		
+
 		SessionUtil.getInstance().setAuditInProgress(true);
 
 		List<EntityDrone> entityDroneList = entityDroneRepository.findAll();
@@ -88,7 +86,7 @@ public class BatteryAuditService
 			entityBatteryHistory = new EntityBatteryHistory();
 			entityBatteryHistory.setBattery_capacity(entityDrone.getBattery_capacity());
 			entityBatteryHistory.setSerial_number(entityDrone.getSerial_number());
-			entityBatteryHistory.setDate_audited(new Date(System.currentTimeMillis()));
+			entityBatteryHistory.setDate_audited(new Timestamp(System.currentTimeMillis()));
 			entityBatteryHistoryRepository.save(entityBatteryHistory);
 		}
 
