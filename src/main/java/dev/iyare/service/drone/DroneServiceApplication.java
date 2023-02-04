@@ -20,6 +20,7 @@ import dev.iyare.service.drone.entities.EntityDrone;
 import dev.iyare.service.drone.entities.EntityMedication;
 import dev.iyare.service.drone.enums.Drone;
 import dev.iyare.service.drone.enums.DroneState;
+import dev.iyare.service.drone.repositories.EntityBatteryHistoryRepository;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.repositories.EntityMedicationRepository;
 import dev.iyare.service.drone.service.BatteryAuditService;
@@ -40,12 +41,15 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 
 	EntityDroneRepository entityDroneRepository;
 	EntityMedicationRepository entityMedicationRepository;
+	EntityBatteryHistoryRepository entityBatteryHistoryRepository;
 
 	public DroneServiceApplication(EntityDroneRepository entityDroneRepository,
-			EntityMedicationRepository entityMedicationRepository)
+			EntityMedicationRepository entityMedicationRepository,
+			EntityBatteryHistoryRepository entityBatteryHistoryRepository)
 	{
 		this.entityDroneRepository = entityDroneRepository;
 		this.entityMedicationRepository = entityMedicationRepository;
+		this.entityBatteryHistoryRepository = entityBatteryHistoryRepository;
 	}
 
 	@Override
@@ -68,7 +72,7 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 
 				preLoadMedications();
 
-				new BatteryAuditService().startService();
+				new BatteryAuditService(entityDroneRepository, entityBatteryHistoryRepository).startService();
 			}
 
 			@Override

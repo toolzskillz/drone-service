@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import dev.iyare.service.drone.entities.EntityBatteryHistory;
 import dev.iyare.service.drone.entities.EntityDrone;
@@ -14,23 +14,18 @@ import dev.iyare.service.drone.repositories.EntityBatteryHistoryRepository;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.utils.SessionUtil;
 
+@Service
 public class BatteryAuditService
 {
 	private final static long sleepTime = 30000 * 1L; // Every 30seconds
 	private static final Log logger = LogFactory.getLog(BatteryAuditService.class);
 
-	@Autowired
 	EntityDroneRepository entityDroneRepository;
 
-	@Autowired
 	EntityBatteryHistoryRepository entityBatteryHistoryRepository;
 
 	Thread auditThread;
 
-	public BatteryAuditService()
-	{
-
-	}
 
 	public BatteryAuditService(EntityDroneRepository entityDroneRepository,
 			EntityBatteryHistoryRepository entityBatteryHistoryRepository)
@@ -80,6 +75,8 @@ public class BatteryAuditService
 
 	private synchronized void auditBatteries() throws Exception
 	{
+		logger.info(":::::::::::::::::::::: Auditing Drone batteries. . . ");
+		
 		SessionUtil.getInstance().setAuditInProgress(true);
 
 		List<EntityDrone> entityDroneList = entityDroneRepository.findAll();

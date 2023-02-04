@@ -16,7 +16,6 @@ public class EntityBatteryHistory extends AbstractEntity
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Drone serial number is required")
-	@Column(unique = true)
 	@Length(min = 1, max = 100, message = "Serial number should not be greater than 100 characters")
 	String serial_number;
 
