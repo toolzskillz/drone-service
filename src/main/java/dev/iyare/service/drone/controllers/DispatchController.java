@@ -123,7 +123,7 @@ public class DispatchController
 			EntityDrone entityDroneFound;
 			if (Objects.nonNull(serialNumber) && Objects.nonNull(model))
 			{
-				entityDroneFound = entityDroneRepository.verifyDroneAvailable(serialNumber, model);
+				entityDroneFound = entityDroneRepository.findBySerialNo(serialNumber);
 				logger.info("entityDrone: " + JsonUtil.toJson(entityDroneFound));
 
 				if (Objects.nonNull(entityDroneFound))
@@ -152,12 +152,12 @@ public class DispatchController
 							break;
 						}
 
+						//
 						logger.info("medication: " + JsonUtil.toJson(medication));
 					}
 				} else
 				{
-					loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
-							"Drone not found");
+					loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(), "Drone not found");
 					response = JsonUtil.toJson(loadDroneResponse);
 				}
 			}

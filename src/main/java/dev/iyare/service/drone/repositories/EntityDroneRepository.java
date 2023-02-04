@@ -10,7 +10,7 @@ import dev.iyare.service.drone.entities.EntityDrone;
 
 public interface EntityDroneRepository extends JpaRepository<EntityDrone, Long>
 {
-	@Query(value = "SELECT * FROM \"drone\" WHERE \"serial_number\" = :serial_number AND \"model\" = :model AND \"state\" ='IDLE'  OR \"state\" ='LOADING'", nativeQuery = true)
+	@Query(value = "SELECT * FROM \"drone\" WHERE \"serial_number\" = :serial_number AND \"model\" = :model AND \"state\" ='IDLE' OR \"state\" ='LOADING'", nativeQuery = true)
 	EntityDrone verifyDroneAvailable(@Param("serial_number") String serial_number, @Param("model") String model);
 
 	@Query(value = "SELECT * FROM \"drone\" WHERE \"state\" ='IDLE' OR \"state\" ='LOADING'", nativeQuery = true)
