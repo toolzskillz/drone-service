@@ -1,5 +1,7 @@
 package dev.iyare.service.drone.entities;
 
+import java.sql.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.Max;
@@ -21,9 +23,22 @@ public class EntityBatteryHistory extends AbstractEntity
 	@NotNull(message = "Drone battery capacity is required")
 	String battery_capacity;
 
+	@NotNull(message = "Date created required")
+	Date date_audited;
+
 	public EntityBatteryHistory()
 	{
 
+	}
+
+	public Date getDate_audited()
+	{
+		return date_audited;
+	}
+
+	public void setDate_audited(Date date_audited)
+	{
+		this.date_audited = date_audited;
 	}
 
 	public String getSerial_number()

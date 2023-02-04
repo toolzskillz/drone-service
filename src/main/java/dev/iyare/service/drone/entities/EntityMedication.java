@@ -12,18 +12,18 @@ public class EntityMedication extends AbstractEntity
 	private static final long serialVersionUID = 1L;
 
 	@NotNull(message = "Medication name is required")
-	String name;// (allowed only letters,numbers,‘-‘,‘_’);
+	String name;
 
 	@NotNull(message = "Medication weight is required")
 	String weight;
 
 	@Column(unique = true)
 	@NotNull(message = "Medication code is required")
-	String code;// (allowed only upper case letters, underscore and numbers);
+	String code;
 
 	@NotNull(message = "Medication image is required")
 	@Column(columnDefinition = "TEXT")
-	String image;
+	String image; // in base64 
 
 	@Nullable
 	String drone_serial_number;
