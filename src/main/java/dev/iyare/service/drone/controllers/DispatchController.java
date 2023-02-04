@@ -152,7 +152,11 @@ public class DispatchController
 							break;
 						}
 
-						//
+
+//- Prevent the drone from being in LOADING state if the battery level is **below 25%**;[PENDING]
+//- Prevent the drone from being loaded with more weight that it can carry;[PENDING]
+//- checking loaded medication items for a given drone; [PENDING]
+						//TODO: Check Weight
 						logger.info("medication: " + JsonUtil.toJson(medication));
 					}
 				} else
