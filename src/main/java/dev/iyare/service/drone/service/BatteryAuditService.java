@@ -25,6 +25,8 @@ public class BatteryAuditService
 	@Autowired
 	EntityBatteryHistoryRepository entityBatteryHistoryRepository;
 
+	Thread auditThread;
+
 	public BatteryAuditService()
 	{
 
@@ -39,7 +41,7 @@ public class BatteryAuditService
 
 	public void startService()
 	{
-		new Thread(() ->
+		auditThread = new Thread(() ->
 		{
 			while (true)
 			{
@@ -58,6 +60,8 @@ public class BatteryAuditService
 
 					} else
 					{
+						if (auditThread.isAlive())
+							auditThread.interrupt();
 						return;
 					}
 
@@ -70,7 +74,8 @@ public class BatteryAuditService
 				sleepAudit();
 			}
 
-		}).start();
+		});
+		auditThread.start();
 	}
 
 	private synchronized void auditBatteries() throws Exception
@@ -98,7 +103,7 @@ public class BatteryAuditService
 		try
 		{
 			logger.info(":::::::::::::::::::::: Sleep Audit. . . ");
-			Thread.sleep(sleepTime);
+			auditThread.sleep(sleepTime);
 
 		} catch (InterruptedException e)
 		{
