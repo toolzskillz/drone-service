@@ -25,13 +25,12 @@ spring.jpa.properties.hibernate.globally_quoted_identifiers=true
 spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 
-
 ## Run
 Clone the repository, create your Spring boot app run configuration and start the application. 
 The application will startup on port of 8080.
 
- ## Postman collection for testing: 
-  https://api.postman.com/collections/991494-2874dbdf-a564-4bb5-8972-2eff9aa35424?access_key=PMAT-01GR455QJ3SFZ5NV2FJ321MHXT 
+## Postman collection for testing: 
+https://api.postman.com/collections/991494-2874dbdf-a564-4bb5-8972-2eff9aa35424?access_key=PMAT-01GR455QJ3SFZ5NV2FJ321MHXT 
 
- ## Generate Base64 image:
- https://www.base64-image.de
+## Generate Base64 image:
+https://www.base64-image.de
