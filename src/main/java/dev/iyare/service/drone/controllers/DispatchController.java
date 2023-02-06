@@ -128,10 +128,21 @@ public class DispatchController
 
 				if (Objects.nonNull(entityDroneFound))
 				{
+
+					if (Integer.parseInt(entityDroneFound.getBattery_capacity()) < 25)
+					{
+						loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
+								entityDroneFound.getModel() + " battery Level is below operating capacity");
+						response = JsonUtil.toJson(loadDroneResponse);
+						return response;
+					}
+
 					List<MedicationRequest> medications = loadDroneRequest.getMedications();
+
+					int totalMedicationsWeight = 0;
 					for (MedicationRequest medication : medications)
 					{
-						medication.setImage(null);
+						medication.setImage(null); // Remove line
 
 						boolean medName = RegExPatternUtil.matchMedName(medication.getName());
 
@@ -152,13 +163,20 @@ public class DispatchController
 							break;
 						}
 
-
-//- Prevent the drone from being in LOADING state if the battery level is **below 25%**;[PENDING]
-//- Prevent the drone from being loaded with more weight that it can carry;[PENDING]
-//- checking loaded medication items for a given drone; [PENDING]
-						//TODO: Check Weight
+						totalMedicationsWeight += Integer.parseInt(medication.getWeight()); 
 						logger.info("medication: " + JsonUtil.toJson(medication));
 					}
+
+					logger.info("totalWeight: " + totalMedicationsWeight);
+
+					int droneWeightLimit = Integer.parseInt(entityDroneFound.getWeight_limit());
+					if (totalMedicationsWeight > droneWeightLimit)
+					{
+						loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
+								"Medications weight exceeds Drone's carrying capacity.");
+						return JsonUtil.toJson(loadDroneResponse);
+					}
+
 				} else
 				{
 					loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(), "Drone not found");
@@ -169,11 +187,7 @@ public class DispatchController
 		{
 			e.printStackTrace();
 
-			loadDroneResponse = new LoadDroneResponse();
-//			loadDroneResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-//			loadDroneResponse.setResponseMessage(AbstractResponse.FAILED);
-			loadDroneResponse.setResponseDescription(e.getMessage());
-
+			loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(), e.getMessage());
 			response = JsonUtil.toJson(loadDroneResponse);
 		}
 
