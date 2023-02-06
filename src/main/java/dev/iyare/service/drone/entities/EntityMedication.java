@@ -17,7 +17,6 @@ public class EntityMedication extends AbstractEntity
 	@NotNull(message = "Medication weight is required")
 	String weight;
 
-	@Column(unique = true)
 	@NotNull(message = "Medication code is required")
 	String code;
 

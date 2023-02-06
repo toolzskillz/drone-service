@@ -27,7 +27,7 @@ spring.h2.console.path=/h2-console
 
 
 ## Run
-Coned the repository,create your run configuration and start your application. 
+Clone the repository, create your Spring boot app run configuration and start the application. 
 The application will startup on port of 8080.
 
  ## Postman collection for testing: 

@@ -1,5 +1,6 @@
 package dev.iyare.service.drone.controllers;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,8 +17,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.iyare.service.drone.entities.EntityDrone;
+import dev.iyare.service.drone.entities.EntityMedication;
+import dev.iyare.service.drone.enums.DroneState;
 import dev.iyare.service.drone.models.request.LoadDroneRequest;
-import dev.iyare.service.drone.models.request.MedicationRequest;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
 import dev.iyare.service.drone.models.response.AbstractResponse;
 import dev.iyare.service.drone.models.response.DroneBatteryLevelResponse;
@@ -116,8 +118,6 @@ public class DispatchController
 
 			String serialNumber = loadDroneRequest.getSerial_number();
 
-			logger.info("serialNumber: " + serialNumber);
-
 			EntityDrone entityDroneFound;
 			if (Objects.nonNull(serialNumber))
 			{
@@ -135,13 +135,14 @@ public class DispatchController
 						return response;
 					}
 
-					List<MedicationRequest> medications = loadDroneRequest.getMedications();
+					List<EntityMedication> medications = Arrays.asList(JsonUtil
+							.fromJson(JsonUtil.toJson(loadDroneRequest.getMedications()), EntityMedication[].class));
+
+					logger.info("medications.size(): " + medications.size());
 
 					int totalMedicationsWeight = 0;
-					for (MedicationRequest medication : medications)
+					for (EntityMedication medication : medications)
 					{
-						medication.setImage(null); // Remove line
-
 						boolean medName = RegExPatternUtil.matchMedName(medication.getName());
 
 						if (medName == false)
@@ -161,11 +162,10 @@ public class DispatchController
 							break;
 						}
 
-						totalMedicationsWeight += Integer.parseInt(medication.getWeight()); 
-						logger.info("medication: " + JsonUtil.toJson(medication));
-					}
+						totalMedicationsWeight += Integer.parseInt(medication.getWeight());
 
-					logger.info("totalWeight: " + totalMedicationsWeight);
+						medication.setDrone_serial_number(entityDroneFound.getSerial_number());
+					}
 
 					int droneWeightLimit = Integer.parseInt(entityDroneFound.getWeight_limit());
 					if (totalMedicationsWeight > droneWeightLimit)
@@ -173,11 +173,26 @@ public class DispatchController
 						loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
 								"Medications weight exceeds Drone's carrying capacity.");
 						return JsonUtil.toJson(loadDroneResponse);
+					} else if (totalMedicationsWeight < droneWeightLimit)
+					{
+
+						entityMedicationRepository.saveAll(medications);
+
+						entityDroneRepository.updateState(DroneState.LOADING.getDescription(),
+								entityDroneFound.getSerial_number());
+
+					} else if (totalMedicationsWeight == droneWeightLimit)
+					{
+						entityMedicationRepository.saveAll(medications);
+
+						entityDroneRepository.updateState(DroneState.LOADED.getDescription(),
+								entityDroneFound.getSerial_number());
 					}
 
 				} else
 				{
-					loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(), "Drone not found");
+					loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(),
+							"Drone not available/found");
 					response = JsonUtil.toJson(loadDroneResponse);
 				}
 			}
@@ -200,7 +215,10 @@ public class DispatchController
 
 		try
 		{
-
+			if (isHeadersValid(headers) == false)
+			{
+				return JsonUtil.toJson(invalidHeader(new LoadDroneResponse()));
+			}
 		} catch (Exception e)
 		{
 
@@ -230,11 +248,8 @@ public class DispatchController
 				response = JsonUtil.toJson(dronesAvailableResponse);
 			} else
 			{
-				dronesAvailableResponse = new DronesAvailableResponse();
-				dronesAvailableResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-				dronesAvailableResponse.setResponseMessage(AbstractResponse.FAILED);
-				dronesAvailableResponse.setResponseDescription("No Drone(s) available");
-
+				dronesAvailableResponse = (DronesAvailableResponse) failed(new DronesAvailableResponse(),
+						"No Drone(s) available");
 				response = JsonUtil.toJson(dronesAvailableResponse);
 			}
 
@@ -242,11 +257,7 @@ public class DispatchController
 		{
 			e.printStackTrace();
 
-			dronesAvailableResponse = new DronesAvailableResponse();
-			dronesAvailableResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-			dronesAvailableResponse.setResponseMessage(AbstractResponse.FAILED);
-			dronesAvailableResponse.setResponseDescription(e.getMessage());
-
+			dronesAvailableResponse = (DronesAvailableResponse) failed(new DronesAvailableResponse(), e.getMessage());
 			response = JsonUtil.toJson(dronesAvailableResponse);
 		}
 
@@ -275,11 +286,8 @@ public class DispatchController
 				response = JsonUtil.toJson(droneBatteryLevelResponse);
 			} else
 			{
-				droneBatteryLevelResponse = new DroneBatteryLevelResponse();
-				droneBatteryLevelResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-				droneBatteryLevelResponse.setResponseMessage(AbstractResponse.FAILED);
-				droneBatteryLevelResponse.setResponseDescription("Drone not found!");
-
+				droneBatteryLevelResponse = (DroneBatteryLevelResponse) failed(new DroneBatteryLevelResponse(),
+						"Drone not found!");
 				response = JsonUtil.toJson(droneBatteryLevelResponse);
 			}
 
@@ -287,11 +295,8 @@ public class DispatchController
 		{
 			e.printStackTrace();
 
-			droneBatteryLevelResponse = new DroneBatteryLevelResponse();
-			droneBatteryLevelResponse.setResponseCode(AbstractResponse.FAILED_CODE);
-			droneBatteryLevelResponse.setResponseMessage(AbstractResponse.FAILED);
-			droneBatteryLevelResponse.setResponseDescription(e.getMessage());
-
+			droneBatteryLevelResponse = (DroneBatteryLevelResponse) failed(new DroneBatteryLevelResponse(),
+					e.getMessage());
 			response = JsonUtil.toJson(droneBatteryLevelResponse);
 		}
 
