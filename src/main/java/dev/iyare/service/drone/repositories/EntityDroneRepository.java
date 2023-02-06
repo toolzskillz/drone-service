@@ -23,6 +23,6 @@ public interface EntityDroneRepository extends JpaRepository<EntityDrone, Long>
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE \"drone\" SET \"state\" =: state WHERE \"serial_number\" = :serial_number", nativeQuery = true)
+	@Query(value = "UPDATE \"drone\" SET \"state\" = :state WHERE \"serial_number\" = :serial_number", nativeQuery = true)
 	void updateState(@Param("state") String state, @Param("serial_number") String serial_number);
 }
