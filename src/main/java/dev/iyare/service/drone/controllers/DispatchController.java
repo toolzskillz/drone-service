@@ -239,6 +239,11 @@ public class DispatchController
 
 		try
 		{
+			if (isHeadersValid(headers) == false)
+			{
+				return JsonUtil.toJson(invalidHeader(new LoadDroneResponse()));
+			}
+
 			List<EntityDrone> entityDronesList = entityDroneRepository.findAvailableDrones();
 
 			if (Objects.nonNull(entityDronesList) && entityDronesList.size() > 0)
@@ -277,6 +282,11 @@ public class DispatchController
 		DroneBatteryLevelResponse droneBatteryLevelResponse = null;
 		try
 		{
+			if (isHeadersValid(headers) == false)
+			{
+				return JsonUtil.toJson(invalidHeader(new LoadDroneResponse()));
+			}
+
 			EntityDrone entityDrone = entityDroneRepository.findBySerialNo(serial_number);
 			if (Objects.nonNull(entityDrone))
 			{
