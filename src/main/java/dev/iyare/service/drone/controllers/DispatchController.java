@@ -115,13 +115,11 @@ public class DispatchController
 //			logger.info("loadDroneRequest: " + JsonUtil.toJson(loadDroneRequest));
 
 			String serialNumber = loadDroneRequest.getSerial_number();
-			String model = loadDroneRequest.getModel();
 
 			logger.info("serialNumber: " + serialNumber);
-			logger.info("model: " + model);
 
 			EntityDrone entityDroneFound;
-			if (Objects.nonNull(serialNumber) && Objects.nonNull(model))
+			if (Objects.nonNull(serialNumber))
 			{
 				entityDroneFound = entityDroneRepository.findBySerialNo(serialNumber);
 				logger.info("entityDrone: " + JsonUtil.toJson(entityDroneFound));

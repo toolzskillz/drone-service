@@ -7,8 +7,6 @@ public class LoadDroneRequest implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	String model;
-
 	String serial_number;
 
 	List<MedicationRequest> medications;
@@ -31,16 +29,6 @@ public class LoadDroneRequest implements Serializable
 	public void setSerial_number(String serial_number)
 	{
 		this.serial_number = serial_number;
-	}
-
-	public String getModel()
-	{
-		return model;
-	}
-
-	public void setModel(String model)
-	{
-		this.model = model;
 	}
 
 	public static long getSerialversionuid()
