@@ -121,7 +121,7 @@ public class DispatchController
 			EntityDrone entityDroneFound;
 			if (Objects.nonNull(serialNumber))
 			{
-				entityDroneFound = entityDroneRepository.findBySerialNo(serialNumber);
+				entityDroneFound = entityDroneRepository.verifyDroneAvailable(serialNumber);
 				logger.info("entityDrone: " + JsonUtil.toJson(entityDroneFound));
 
 				if (Objects.nonNull(entityDroneFound))

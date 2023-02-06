@@ -11,6 +11,25 @@ This is a service via REST API that allows clients to communicate with the drone
 - Prevent the drone from being in LOADING state if the battery level is below 25%.
 - Periodic task to check drones battery levels and create history/audit event log.
 
+## application.properties
+spring.datasource.url=jdbc:h2:mem:dronedb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=drones
+spring.datasource.password=
+spring.jpa.defer-datasource-initialization=true
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.validator.apply_to_ddl=false
+spring.jpa.properties.hibernate.globally_quoted_identifiers=true
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console
+
+
+## Run
+Coned the repository,create your run configuration and start your application. 
+The application will startup on port of 8080.
+
  ## Postman collection for testing: 
   https://api.postman.com/collections/991494-2874dbdf-a564-4bb5-8972-2eff9aa35424?access_key=PMAT-01GR455QJ3SFZ5NV2FJ321MHXT 
 
