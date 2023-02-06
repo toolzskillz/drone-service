@@ -20,11 +20,13 @@ import dev.iyare.service.drone.entities.EntityDrone;
 import dev.iyare.service.drone.entities.EntityMedication;
 import dev.iyare.service.drone.enums.DroneState;
 import dev.iyare.service.drone.models.request.LoadDroneRequest;
+import dev.iyare.service.drone.models.request.LoadedDroneRequest;
 import dev.iyare.service.drone.models.request.RegisterDroneRequest;
 import dev.iyare.service.drone.models.response.AbstractResponse;
 import dev.iyare.service.drone.models.response.DroneBatteryLevelResponse;
 import dev.iyare.service.drone.models.response.DronesAvailableResponse;
 import dev.iyare.service.drone.models.response.LoadDroneResponse;
+import dev.iyare.service.drone.models.response.LoadedDroneResponse;
 import dev.iyare.service.drone.models.response.RegisterDroneResponse;
 import dev.iyare.service.drone.repositories.EntityDroneRepository;
 import dev.iyare.service.drone.repositories.EntityMedicationRepository;
@@ -199,6 +201,10 @@ public class DispatchController
 							"Drone not available/found");
 					response = JsonUtil.toJson(loadDroneResponse);
 				}
+			} else
+			{
+				loadDroneResponse = (LoadDroneResponse) failed(new LoadDroneResponse(), "Drone not available/found");
+				response = JsonUtil.toJson(loadDroneResponse);
 			}
 		} catch (Exception e)
 		{
@@ -211,11 +217,12 @@ public class DispatchController
 		return response;
 	}
 
-	@PostMapping(value = "/check-medlist-for-drone")
+	@PostMapping(value = "/check-loaded-medlist-for-drone")
 	public @ResponseBody String checkMedicationsForDrone(@RequestHeader HttpHeaders headers,
 			@RequestBody String request)
 	{
 		String response = null;
+		LoadedDroneResponse loadedDroneResponse = null;
 
 		try
 		{
@@ -223,9 +230,50 @@ public class DispatchController
 			{
 				return JsonUtil.toJson(invalidHeader(new LoadDroneResponse()));
 			}
+
+			LoadedDroneRequest loadedDroneRequest = JsonUtil.fromJson(request, LoadedDroneRequest.class);
+			logger.info("loadedDroneRequest: " + JsonUtil.toJson(loadedDroneRequest));
+
+			String serialNumber = loadedDroneRequest.getSerial_number();
+
+			EntityDrone entityDroneFound;
+			if (Objects.nonNull(serialNumber))
+			{
+				entityDroneFound = entityDroneRepository.findBySerialNo(serialNumber);
+				logger.info("entityDrone: " + JsonUtil.toJson(entityDroneFound));
+
+				if (Objects.nonNull(entityDroneFound))
+				{
+
+					List<EntityMedication> medicationList = entityMedicationRepository
+							.findByDroneSerialNo(entityDroneFound.getSerial_number());
+
+					loadedDroneResponse = new LoadedDroneResponse();
+					loadedDroneResponse.setData(JsonUtil.toJson(medicationList));
+					loadedDroneResponse.setResponseCode(AbstractResponse.SUCCESSFUL_CODE);
+					loadedDroneResponse.setResponseMessage(AbstractResponse.SUCCESSFUL);
+					loadedDroneResponse.setResponseDescription("Loaded medication list found!");
+					response = JsonUtil.toJson(loadedDroneResponse);
+
+				} else
+				{
+					loadedDroneResponse = (LoadedDroneResponse) failed(new LoadedDroneResponse(),
+							"Drone not available/found");
+					response = JsonUtil.toJson(loadedDroneResponse);
+				}
+
+			} else
+			{
+				loadedDroneResponse = (LoadedDroneResponse) failed(new LoadedDroneResponse(),
+						"Drone not available/found");
+				response = JsonUtil.toJson(loadedDroneResponse);
+			}
+
 		} catch (Exception e)
 		{
-
+			e.printStackTrace();
+			loadedDroneResponse = (LoadedDroneResponse) failed(new LoadedDroneResponse(), e.getMessage());
+			response = JsonUtil.toJson(loadedDroneResponse);
 		}
 
 		return response;
