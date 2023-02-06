@@ -135,7 +135,7 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 		entityDrone.setModel(Drone.MIDDLE.getModel());
 		entityDrone.setWeight_limit(Drone.MIDDLE.getWeightLimit());
 		entityDrone.setBattery_capacity("30");
-		entityDrone.setState(DroneState.DELIVERING.getDescription());
+		entityDrone.setState(DroneState.IDLE.getDescription());
 		drones.add(entityDrone);
 
 		entityDrone = new EntityDrone();
@@ -143,7 +143,7 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 		entityDrone.setModel(Drone.CRUISER.getModel());
 		entityDrone.setWeight_limit(Drone.CRUISER.getWeightLimit());
 		entityDrone.setBattery_capacity("50");
-		entityDrone.setState(DroneState.LOADING.getDescription());
+		entityDrone.setState(DroneState.IDLE.getDescription());
 		drones.add(entityDrone);
 
 		entityDrone = new EntityDrone();
@@ -151,7 +151,7 @@ public class DroneServiceApplication extends SpringBootServletInitializer
 		entityDrone.setModel(Drone.HEAVY.getModel());
 		entityDrone.setWeight_limit(Drone.HEAVY.getWeightLimit());
 		entityDrone.setBattery_capacity("70");
-		entityDrone.setState(DroneState.RETURNING.getDescription());
+		entityDrone.setState(DroneState.DELIVERING.getDescription());
 		drones.add(entityDrone);
 
 		entityDroneRepository.saveAll(drones);

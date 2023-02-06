@@ -138,8 +138,6 @@ public class DispatchController
 					List<EntityMedication> medications = Arrays.asList(JsonUtil
 							.fromJson(JsonUtil.toJson(loadDroneRequest.getMedications()), EntityMedication[].class));
 
-					logger.info("medications.size(): " + medications.size());
-
 					int totalMedicationsWeight = 0;
 					for (EntityMedication medication : medications)
 					{
@@ -188,6 +186,12 @@ public class DispatchController
 						entityDroneRepository.updateState(DroneState.LOADED.getDescription(),
 								entityDroneFound.getSerial_number());
 					}
+
+					loadDroneResponse = new LoadDroneResponse();
+					loadDroneResponse.setResponseCode(AbstractResponse.SUCCESSFUL_CODE);
+					loadDroneResponse.setResponseMessage(AbstractResponse.SUCCESSFUL);
+					loadDroneResponse.setResponseDescription("Medications Loaded!");
+					response = JsonUtil.toJson(loadDroneResponse);
 
 				} else
 				{
